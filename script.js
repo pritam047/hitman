@@ -7,6 +7,7 @@ const form = document.querySelector("[data-form]")
 const queryParamsContainer = document.querySelector("[data-query-params]")
 const requestHeadersContainer = document.querySelector("[data-request-headers]")
 const keyValueTemplate = document.querySelector("[data-key-value-template]")
+const responseHeadersContainer = document.querySelector("[data-response-headers]")
 
 // add keyValueTemplate on Query Params tab
 document
@@ -35,16 +36,30 @@ form.addEventListener("submit", e => {
         params: keyValuePairsToObjects(queryParamsContainer),
         headers: keyValuePairsToObjects(requestHeadersContainer),
     }).then(response => {
-        document
-            .querySelector("[data-response-section]")
-            .classList.remove("d-none");
-        updateResponseDetails(response);
-        updateResponseEditor(response.data);
+        document.querySelector("[data-response-section]").classList.remove("d-none");
+        // updateResponseDetails(response);
+        // updateResponseEditor(response.data);
         updateResponseHeaders(response.headers);
         console.log(response);
     })
         .catch(e => e);
 })
+
+// Handling the response status bar details
+
+
+// response headers data handler
+function updateResponseHeaders(headers) {
+    responseHeadersContainer.innerHTML = ""
+    Object.entries(headers).forEach(([key, value]) => {
+      const keyElement = document.createElement("div")
+      keyElement.textContent = key
+      responseHeadersContainer.append(keyElement)
+      const valueElement = document.createElement("div")
+      valueElement.textContent = value
+      responseHeadersContainer.append(valueElement)
+    })
+  }  
 
 // cloning and removing the key value template
 function createKeyValuePair() {
