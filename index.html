@@ -5,11 +5,76 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="script.js" type="module"></script>
     <title>Hitman</title>
 </head>
 
 <body>
+    <style>
+        body.dark {
+            background-color: #292c35;
+        }
+
+        .checkbox {
+            opacity: 0;
+            position: absolute;
+        }
+
+        .label {
+            width: 50px;
+            height: 26px;
+            background-color: #111;
+            display: flex;
+            border-radius: 50px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px;
+            position: relative;
+            transform: scale(1.5);
+        }
+
+        .ball {
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            border-radius: 50%;
+            transition: transform 0.2s linear;
+        }
+
+        /*  target the elemenent after the label*/
+        .checkbox:checked+.label .ball {
+            transform: translateX(24px);
+        }
+
+        .fa-moon {
+            color: rgb(78, 47, 53);
+        }
+
+        .fa-sun {
+            color: yellow;
+        }
+    </style>
+    <nav class="navbar navbar-dark bg-secondary justify-content-between px-4">
+        <a class="navbar-brand" href="#">
+            <img src="/images/fly-64.png" width="30" height="30" class="d-inline-block align-top" alt="brand-logo">
+            <span style="color: rgb(255, 255, 255);">Hitman</span>
+        </a>
+
+        <div>
+            <input type="checkbox" class="checkbox" id="checkbox">
+            <label for="checkbox" class="label">
+                <i class="fas fa-moon"></i>
+                <i class='fas fa-sun'></i>
+                <div class='ball'>
+            </label>
+        </div>
+    </nav>
     <div class="p-4">
         <form action="" data-form>
             <div class="input-group mb-4">
