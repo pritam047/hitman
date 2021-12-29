@@ -22,5 +22,22 @@ export default function setupEditors() {
         parent: jsonRequestBody,
     })
 
-    return {requestEditor};
+    const responseEditor = new EditorView({
+        state: EditorState.create({
+          doc: "{}",
+          extensions: [...basicExtensions, EditorView.editable.of(false)],
+        }),
+        parent: jsonResponseBody,
+      })
+    
+      function updateResponseEditor(value) {
+        responseEditor.dispatch({
+          changes: {
+            from: 0,
+            to: responseEditor.state.doc.length,
+            insert: JSON.stringify(value, null, 2),
+          },
+        })
+      }
+    return {requestEditor, updateResponseEditor};
 }
