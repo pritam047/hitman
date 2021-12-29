@@ -1,6 +1,7 @@
 import "bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css"
 import axios from "axios"
+import prettyBytes from "pretty-bytes"
 
 // selecting the required components
 const form = document.querySelector("[data-form]")
@@ -26,6 +27,22 @@ document
 queryParamsContainer.append(createKeyValuePair())
 requestHeadersContainer.append(createKeyValuePair())
 
+axios.interceptors.request.use(request => {
+    request.customData = request.customData || {};
+    request.customData.startTime = new Date().getTime();
+    return request;
+})
+
+function updateEndTime(response) {
+    response.customData = response.customData || {};
+    response.customData.time = new Date().getTime() - response.config.customData.startTime;
+    return response;
+}
+
+axios.interceptors.response.use(updateEndTime, e => {
+    return Promise.reject(updateEndTime(e.response));
+})
+
 // Handling the form submission 
 form.addEventListener("submit", e => {
     e.preventDefault();
@@ -45,21 +62,28 @@ form.addEventListener("submit", e => {
         .catch(e => e);
 })
 
-// Handling the response status bar details
-
+// response details bar handler
+function updateResponseDetails(response) {
+    document.querySelector("[data-status]").textContent = response.status
+    document.querySelector("[data-time]").textContent = response.customData.time
+    document.querySelector("[data-size]").textContent = prettyBytes(
+        JSON.stringify(response.data).length +
+        JSON.stringify(response.headers).length
+    )
+}
 
 // response headers data handler
 function updateResponseHeaders(headers) {
     responseHeadersContainer.innerHTML = ""
     Object.entries(headers).forEach(([key, value]) => {
-      const keyElement = document.createElement("div")
-      keyElement.textContent = key
-      responseHeadersContainer.append(keyElement)
-      const valueElement = document.createElement("div")
-      valueElement.textContent = value
-      responseHeadersContainer.append(valueElement)
+        const keyElement = document.createElement("div")
+        keyElement.textContent = key
+        responseHeadersContainer.append(keyElement)
+        const valueElement = document.createElement("div")
+        valueElement.textContent = value
+        responseHeadersContainer.append(valueElement)
     })
-  }  
+}
 
 // cloning and removing the key value template
 function createKeyValuePair() {
