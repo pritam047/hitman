@@ -1,5 +1,5 @@
 import { EditorState, basicSetup } from "@codemirror/basic-setup"
-import { defaultTabBinding } from "@codemirror/commands"
+import { indentWithTab } from "@codemirror/commands"
 import { EditorView, keymap } from "@codemirror/view"
 import { json } from "@codemirror/lang-json"
 
@@ -9,7 +9,7 @@ export default function setupEditors() {
 
     const basicExtensions = [
         basicSetup,
-        keymap.of([defaultTabBinding]),
+        keymap.of([indentWithTab]),
         json(),
         EditorState.tabSize.of(2),
     ]

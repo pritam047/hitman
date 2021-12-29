@@ -2,6 +2,7 @@ import "bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css"
 import axios from "axios"
 import prettyBytes from "pretty-bytes"
+import setupEditors from "./setupEditors"
 
 // selecting the required components
 const form = document.querySelector("[data-form]")
@@ -43,19 +44,30 @@ axios.interceptors.response.use(updateEndTime, e => {
     return Promise.reject(updateEndTime(e.response));
 })
 
+const { requestEditor, updateResponseEditor } = setupEditors();
+
 // Handling the form submission 
 form.addEventListener("submit", e => {
     e.preventDefault();
+
+    let data;
+    try {
+        data = JSON.parse(requestEditor.state.doc.toString() || null);
+    } catch (e) {
+        alert("JSON data is malformed");
+        return;
+    }
 
     axios({
         url: document.querySelector("[data-url]").value,
         method: document.querySelector("[data-method]").value,
         params: keyValuePairsToObjects(queryParamsContainer),
         headers: keyValuePairsToObjects(requestHeadersContainer),
+        data
     }).then(response => {
         document.querySelector("[data-response-section]").classList.remove("d-none");
-        // updateResponseDetails(response);
-        // updateResponseEditor(response.data);
+        updateResponseDetails(response);
+        updateResponseEditor(response.data);
         updateResponseHeaders(response.headers);
         console.log(response);
     })
@@ -106,8 +118,4 @@ function keyValuePairsToObjects(container) {
     }, {})
 }
 
-
-
-
-console.log("JS working")
 
